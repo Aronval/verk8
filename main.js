@@ -1,4 +1,5 @@
 import { createCartLine, showCartContent } from './lib/ui.js';
+import { validateInteger } from './lib/helpers.js';
 
 /**
  * @typedef {Object} Product
@@ -41,6 +42,8 @@ function addProductToCart(product, quantity) {
   const cartTableBodyElement = document.querySelector('.cart table tbody');
 console.log('cartTableBodyElement :>> ', cartTableBodyElement);
 
+
+
   if (!cartTableBodyElement) {
     console.warn('fann ekki .cart table');
     return;
@@ -54,6 +57,7 @@ console.log('cartTableBodyElement :>> ', cartTableBodyElement);
   showCartContent(true);
 
   // TODO sýna/uppfæra samtölu körfu
+
 }
 
 function submitHandler(event) {
@@ -73,10 +77,19 @@ if (!product) {
   return;
 }
 
-  // TODO hér þarf að finna fjölda sem á að bæta við körfu með því að athuga
-  // á input
-  const quantity = 1;
+  const quantityInputElement = parent.querySelector('input[type="number"]',);
+  console.log(quantityInputElement);
+  if(!quantityInputElement){
+    console.warn('get ekki fundið fjölda input');
+    return;
+  }
 
+  const quantity = Number.parseInt(quantityInputElement.value ?? '', 10);
+  if(!validateInteger(quantity, 1, 99)) {
+    console.warn('fjöldi ekki á bilinu [0,99]');
+    return;
+  }
+  
   // Bætum vöru í körfu (hér væri gott að bæta við athugun á því að varan sé til)
   addProductToCart(product, quantity);
 }
